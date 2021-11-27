@@ -1,10 +1,10 @@
-# homebridge-hyperion-control
+# homebridge-hyperion-service
 Homebridge plugin to turn hyperion ng instance on/off and change brightness
 
 ## Install
 
 ```
-sudo npm install -g homebridge-hyperion-control
+npm install -g homebridge-hyperion-service
 ```
 
 ## Configuration

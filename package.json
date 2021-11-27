@@ -1,5 +1,5 @@
 {
-  "name": "homebridge-hyperion-servie",
+  "name": "homebridge-hyperion-service",
   "displayName": "Hyperion",
   "version": "1.0.0",
   "description": "Homebridge plugin to control Hyperion ng",
