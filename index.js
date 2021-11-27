@@ -54,4 +54,10 @@ class Hyperion {
             this.log.error(`Failed to set the state to: ${value}`)
         }
     }
+
+    getServices() {
+        return [
+            this.service,
+        ];
+    }
 }
