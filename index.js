@@ -8,6 +8,7 @@ class Hyperion {
     constructor(log, config, api) {
         this.log = log;
         this.config = config;
+        this.name = config.name || "Hyperion";
         this.port = config.port || 8090;
         this.url = `${config.url}:${this.port}/json-rpc`;
         this.api = api;
@@ -15,9 +16,7 @@ class Hyperion {
         this.Service = this.api.hap.Service;
         this.Characteristic = this.api.hap.Characteristic;
 
-        this.name = config.name || "Hyperion";
-
-        this.service = new this.Service(this.Service.Lightbulb);
+        this.service = new this.Service.Lightbulb(this.name);
 
         this.service.getCharacteristic(this.Characteristic.On)
 
