@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-module.exports = function (api) {
+module.exports = (api) => {
     api.registerAccessory('homebridge-hyperion-control', 'Hyperion', Hyperion);
 }
 
@@ -16,6 +16,8 @@ class Hyperion {
         this.Characteristic = this.api.hap.Characteristic;
 
         this.name = config.name || "Hyperion";
+
+        this.service = new this.Service(this.Service.Lightbulb);
 
         this.service.getCharacteristic(this.Characteristic.On)
 
