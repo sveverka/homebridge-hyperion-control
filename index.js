@@ -1,4 +1,4 @@
-import axios from 'axios';
+const axios = require('axios');
 
 module.exports = function (api) {
     api.registerAccessory('homebridge-hyperion-control', 'Hyperion', Hyperion);
