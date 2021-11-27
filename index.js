@@ -30,6 +30,7 @@ class Hyperion {
         const {url} = this;
 
         const response = await axios.post(url, {"command": "serverinfo"});
+        this.log.debug(response)
         const status = response.info.components[0].enabled;
 
         return Boolean(status)
