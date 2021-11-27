@@ -6,7 +6,7 @@
   "author": "Cortlan Bainbridge",
   "license": "MIT",
   "main": "index.js",
-  "type": "module",
+  "type": "commonjs",
   "engines": {
     "homebridge": ">=0.4.50",
     "node": ">=14.0.0"

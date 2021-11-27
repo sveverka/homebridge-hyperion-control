@@ -1,6 +1,6 @@
 let Service, Characteristic;
-import packageJson from './package.json';
-import fetch from 'node-fetch';
+const packageJson = require('./package.json');
+const fetch = require('node-fetch');
 
 let savedState = false;
 let savedBrightness = 0;
@@ -12,11 +12,11 @@ module.exports = function (homebridge) {
 
     Characteristic = homebridge.hap.Characteristic;
 
-    homebridge.registerAccessory('homebridge-hyperion-control', 'HyperionControl', HyperionControl);
+    homebridge.registerAccessory('homebridge-hyperion-control', 'Hyperion', Hyperion);
 
 }
 
-function HyperionControl(log, config) {
+function Hyperion(log, config) {
 
     this.log = log;
 
@@ -42,7 +42,7 @@ function HyperionControl(log, config) {
 
 }
 
-HyperionControl.prototype = {
+Hyperion.prototype = {
 
     fetchData: async function (bodyData, callback) {
 
