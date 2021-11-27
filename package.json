@@ -1,17 +1,18 @@
 {
-  "name": "homebridge-hyperion-control",
-  "displayName": "HyperionControl",
-  "version": "0.1.0",
+  "name": "homebridge-hyperion-servie",
+  "displayName": "Hyperion",
+  "version": "1.0.0",
   "description": "Homebridge plugin to control Hyperion ng",
-  "author": "Sascha Petrik",
+  "author": "Cortlan Bainbridge",
   "license": "MIT",
   "main": "index.js",
+  "type": "module",
   "engines": {
     "homebridge": ">=0.4.50",
-    "node": ">=12.0.0"
+    "node": ">=14.0.0"
   },
   "dependencies": {
-    "node-fetch": ">=2.6.0"
+    "node-fetch": ">=3.1.0"
   },
   "keywords": [
     "homebridge-plugin"
