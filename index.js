@@ -1,188 +1,56 @@
-let Service, Characteristic;
-const packageJson = require('./package.json');
-const fetch = require('node-fetch');
+import axios from 'axios';
 
-let savedState = false;
-let savedBrightness = 0;
-let errorCount = 0;
-
-module.exports = function (homebridge) {
-
-    Service = homebridge.hap.Service;
-
-    Characteristic = homebridge.hap.Characteristic;
-
-    homebridge.registerAccessory('homebridge-hyperion-control', 'Hyperion', Hyperion);
-
+module.exports = function (api) {
+    api.registerAccessory('homebridge-hyperion-control', 'Hyperion', Hyperion);
 }
 
-function Hyperion(log, config) {
+class Hyperion {
+    constructor(log, config, api) {
+        this.log = log;
+        this.config = config;
+        this.port = config.port || 8090;
+        this.url = `${config.url}:${this.port}/json-rpc`;
+        this.api = api;
 
-    this.log = log;
+        this.Service = this.api.hap.Service;
+        this.Characteristic = this.api.hap.Characteristic;
 
-    this.name = config.name || "Hyperion";
-    this.port = config.port || 8090;
-    this.url = config.url + ":" + this.port + "/json-rpc";
-    this.token = config.token || 0;
+        this.name = config.name || "Hyperion";
 
-    this.headersData = {"Content-Type": "application/json"};
+        this.service.getCharacteristic(this.Characteristic.On)
 
-    if (this.token != 0) {
-
-        this.headersData["Authorization"] = "token " + this.token;
-
+        this.service.getCharacteristic(this.Characteristic.On)
+            .onGet(this.handleOnGet.bind(this))
+            .onSet(this.handleOnSet.bind(this));
     }
 
-    this.manufacturer = packageJson.author;
-    this.serial = this.url;
-    this.model = packageJson.name;
-    this.firmware = packageJson.version;
+    async handleOnGet() {
+        this.log.debug('Triggered GET On');
+        const {url} = this;
 
-    this.service = new Service.Lightbulb(this.name);
+        const response = await axios.post(url, {"command": "serverinfo"});
+        const status = response.info.components[0].enabled;
 
-}
+        return Boolean(status)
+            ? 1
+            : 0;
+    }
 
-Hyperion.prototype = {
+    async handleOnSet(value) {
+        this.log.debug('Triggered SET On:', value);
+        const {url} = this;
 
-    fetchData: async function (bodyData, callback) {
-
-        try {
-
-            const fetchData = await fetch(this.url, {
-                method: 'POST',
-                headers: this.headersData,
-                body: bodyData,
-            });
-
-            const responseData = await fetchData.json();
-
-            if (responseData.success) {
-
-                callback(responseData);
-
-                errorCount = 0;
-
-            } else {
-
-                if (errorCount == 0) {
-
-                    this.log("===== ERROR LOG START =====");
-                    this.log(responseData);
-
-                }
-
-                callback("error");
-
+        const response = await axios.post(url, {
+            command: "componentstate",
+            componentstate: {
+                component: "ALL",
+                state: value
             }
+        })
+        const {success} = response;
 
-        } catch (error) {
-
-            callback("error");
-
+        if (!success) {
+            this.log.error(`Failed to set the state to: ${value}`)
         }
-
-    },
-
-    getState: function (callback) {
-
-        callback(null, savedState);
-
-        this.fetchData('{"command":"serverinfo"}', function (response) {
-
-            if (response != "error") {
-
-                this.service.getCharacteristic(Characteristic.On).updateValue(response.info.components[0].enabled);
-
-                savedState = response.info.components[0].enabled;
-
-            } else {
-
-                if (errorCount == 0) {
-
-                    this.log("===== ERROR LOG END =====");
-
-                    errorCount++
-
-                }
-
-            }
-
-        }.bind(this));
-
-    },
-
-    setState: function (value, callback) {
-
-        this.fetchData('{"command":"componentstate","componentstate":{"component":"ALL","state":' + value + '}}', function (response) {
-
-            const stateString = (value) ? "ON" : "OFF";
-
-            this.log("Turn Instance: " + stateString);
-
-            callback();
-
-        }.bind(this));
-
-    },
-
-    getBrightness: function (callback) {
-
-        callback(null, savedBrightness);
-
-        this.fetchData('{"command":"serverinfo"}', function (response) {
-
-            if (response != "error") {
-
-                this.service.getCharacteristic(Characteristic.Brightness).updateValue(response.info.adjustment[0].brightness);
-
-                savedBrightness = response.info.adjustment[0].brightness;
-
-            }
-
-        }.bind(this));
-
-    },
-
-    setBrightness: function (value, callback) {
-
-        this.fetchData('{"command":"adjustment","adjustment":{"brightness":' + value + '}}', function (response) {
-
-            this.log("Set Brightness to: " + value) + "%";
-
-            callback();
-
-        }.bind(this));
-
-    },
-
-    identify: function (callback) {
-
-        callback();
-
-    },
-
-
-    getServices: function () {
-
-        this.informationService = new Service.AccessoryInformation();
-
-        this.informationService
-            .setCharacteristic(Characteristic.Manufacturer, this.manufacturer)
-            .setCharacteristic(Characteristic.Model, this.model)
-            .setCharacteristic(Characteristic.SerialNumber, this.serial)
-            .setCharacteristic(Characteristic.FirmwareRevision, this.firmware);
-
-        this.service
-            .getCharacteristic(Characteristic.On)
-            .on('get', this.getState.bind(this))
-            .on('set', this.setState.bind(this));
-
-        this.service.addCharacteristic(Characteristic.Brightness)
-            .on("get", this.getBrightness.bind(this))
-            .on("set", this.setBrightness.bind(this));
-
-        return [this.informationService, this.service];
-
     }
-
 }

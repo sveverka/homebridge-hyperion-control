@@ -1,27 +1,26 @@
 {
   "name": "homebridge-hyperion-service",
   "displayName": "Hyperion",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Homebridge plugin to control Hyperion ng",
   "author": "Cortlan Bainbridge",
   "license": "MIT",
   "main": "index.js",
-  "type": "commonjs",
   "engines": {
-    "homebridge": ">=0.4.50",
-    "node": ">=14.0.0"
+    "node": ">=14.18.1",
+    "homebridge": ">=1.3.5"
   },
   "dependencies": {
-    "node-fetch": ">=3.1.0"
+    "axios": "^0.24.0"
   },
   "keywords": [
     "homebridge-plugin"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/satrik/homebridge-hyperion-control"
+    "url": "https://github.com/cortl/homebridge-hyperion-service"
   },
   "bugs": {
-    "url": "https://github.com/satrik/homebridge-hyperion-control/issues"
+    "url": "https://github.com/cortl/homebridge-hyperion-service/issues"
   }
 }
