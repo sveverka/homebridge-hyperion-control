@@ -1,7 +1,7 @@
 {
   "name": "homebridge-hyperion-service",
   "displayName": "Hyperion",
-  "version": "1.1.6",
+  "version": "1.1.8",
   "description": "Homebridge plugin to control Hyperion ng",
   "author": "Cortlan Bainbridge",
   "license": "MIT",

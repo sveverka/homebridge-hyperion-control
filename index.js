@@ -29,9 +29,8 @@ class Hyperion {
         this.log.debug('Triggered GET On');
         const {url} = this;
 
-        const response = await axios.post(url, {"command": "serverinfo"});
-        this.log.debug(response)
-        const status = response.info.components[0].enabled;
+        const {data} = await axios.post(url, {"command": "serverinfo"});
+        const status = data.info.components[0].enabled;
 
         return Boolean(status)
             ? 1
@@ -42,14 +41,14 @@ class Hyperion {
         this.log.debug('Triggered SET On:', value);
         const {url} = this;
 
-        const response = await axios.post(url, {
+        const {data} = await axios.post(url, {
             command: "componentstate",
             componentstate: {
                 component: "ALL",
                 state: value
             }
         })
-        const {success} = response;
+        const {success} = data;
 
         if (!success) {
             this.log.error(`Failed to set the state to: ${value}`)
