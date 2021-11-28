@@ -23,6 +23,10 @@ class Hyperion {
         this.service.getCharacteristic(this.Characteristic.On)
             .onGet(this.handleOnGet.bind(this))
             .onSet(this.handleOnSet.bind(this));
+
+        this.service.addCharacteristic(Characteristic.Brightness)
+            .onGet(this.getBrightness.bind(this))
+            .onSet(this.setBrightness.bind(this));
     }
 
     async handleOnGet() {
@@ -52,6 +56,32 @@ class Hyperion {
 
         if (!success) {
             this.log.error(`Failed to set the state to: ${value}`)
+        }
+    }
+
+    async handleBrightnessGet() {
+        this.log.debug('Triggered GET On');
+        const {url} = this;
+
+        const {data} = await axios.post(url, {"command": "serverinfo"});
+        const {brightness} = data.info.adjustment[0];
+
+        this.service.getCharacteristic(this.Characteristic.Brightness).updateValue(brightness);
+    }
+
+    async handleBrightnessSet(value) {
+        const {url} = this;
+
+        const {data} = await axios.post(url, {
+            command: "adjustment",
+            adjustment: {
+                brightness: value
+            }
+        });
+        const {success} = data;
+
+        if (!success) {
+            this.log.error(`Failed to set the brightness to: ${value}`)
         }
     }
 
