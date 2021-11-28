@@ -1,4 +1,5 @@
 const axios = require('axios');
+const Color = require('color');
 
 module.exports = (api) => {
     api.registerAccessory('homebridge-hyperion-control', 'Hyperion', Hyperion);
@@ -12,6 +13,7 @@ class Hyperion {
         this.port = config.port || 8090;
         this.url = `${config.url}:${this.port}/json-rpc`;
         this.api = api;
+        this.color = Color().rgb([0, 0, 0])
 
         this.Service = this.api.hap.Service;
         this.Characteristic = this.api.hap.Characteristic;
@@ -27,6 +29,11 @@ class Hyperion {
         this.service.addCharacteristic(this.Characteristic.Brightness)
             .onGet(this.handleBrightnessGet.bind(this))
             .onSet(this.handleBrightnessSet.bind(this));
+
+        this.service
+            .addCharacteristic(this.Characteristic.Hue)
+            .onSet(this.handleHueSet.bind(this))
+            .onGet(this.handleHueGet.bind(this));
     }
 
     async handleOnGet() {
@@ -83,6 +90,30 @@ class Hyperion {
         if (!success) {
             this.log.error(`Failed to set the brightness to: ${value}`)
         }
+    }
+
+    async handleHueSet(value) {
+        const {url} = this;
+        const newHue = Color(this.color).hue(level)
+
+        const {data} = await axios.post(url, {
+            command: "color",
+            priority: 99,
+            color: newHue
+        });
+        const {success} = data;
+
+        if (!success) {
+            this.log.error(`Failed to set the brightness to: ${value}`)
+        } else {
+            this.color.hue(newHue.hue())
+        }
+
+        return this.color.hue();
+    }
+
+    async handleHueGet() {
+        return this.color.hue();
     }
 
     getServices() {
