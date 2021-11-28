@@ -24,7 +24,7 @@ class Hyperion {
             .onGet(this.handleOnGet.bind(this))
             .onSet(this.handleOnSet.bind(this));
 
-        this.service.addCharacteristic(Characteristic.Brightness)
+        this.service.addCharacteristic(this.Characteristic.Brightness)
             .onGet(this.getBrightness.bind(this))
             .onSet(this.setBrightness.bind(this));
     }
