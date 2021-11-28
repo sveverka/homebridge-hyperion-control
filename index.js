@@ -106,9 +106,9 @@ class Hyperion {
         const newHue = Color(this.color).hue(value);
         this.color = newHue;
 
-        this.log.info(`Setting hue to: ${value}`)
+        this.log.debug(`Setting hue to: ${value}`)
 
-        this.log.info(`Successfully set the hue.`)
+        this.log.debug(`Successfully set the hue.`)
 
         return this.color.hue();
     }
@@ -126,7 +126,7 @@ class Hyperion {
         const {url} = this;
         const newColor = Color(this.color).saturationv(level);
 
-        this.log.info(`Setting saturation to: ${level}`)
+        this.log.debug(`Setting saturation to: ${level}`)
 
         const {data} = await axios.post(url, {
             command: "color",
@@ -139,7 +139,7 @@ class Hyperion {
         if (!success) {
             this.log.error(`Failed to set the saturation to: ${level}`);
         } else {
-            this.log.info(`Successfully set the saturation. New color ${newColor.rgb().round().array()}`)
+            this.log.debug(`Successfully set the saturation. New color ${newColor.rgb().round().array()}`)
             this.color.hue(newColor.hue());
         }
     }
