@@ -15,6 +15,7 @@ class Hyperion {
 
         this.name = config.name || "Hyperion";
         this.port = config.port || 8090;
+        this.priority = config.priority || 100;
         this.url = `${config.url}:${this.port}/json-rpc`;
         this.color = Color([255, 200, 150])
 
@@ -123,14 +124,14 @@ class Hyperion {
 
     async handleSaturationSet(level) {
         await wait(100);
-        const {url} = this;
+        const {url, priority} = this;
         const newColor = Color(this.color).saturationv(level);
 
         this.log.debug(`Setting saturation to: ${level}`)
 
         const {data} = await axios.post(url, {
             command: "color",
-            priority: 99,
+            priority,
             color: newColor.rgb().round().array()
         });
 
