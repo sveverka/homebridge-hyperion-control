@@ -13,7 +13,7 @@ class HyperHDR {
         this.config = config;
         this.api = api;
 
-        this.name = config.name || "Hyperion";
+        this.name = config.name || "HyperHDR";
         this.port = config.port || 8090;
         this.priority = config.priority || 100;
         this.url = `${config.url}:${this.port}/json-rpc`;
@@ -33,17 +33,17 @@ class HyperHDR {
             .onGet(this.handleOnGet.bind(this))
             .onSet(this.handleOnSet.bind(this));
 
-        this.service.addCharacteristic(this.Characteristic.Brightness)
+        this.service.getCharacteristic(this.Characteristic.Brightness)
             .onGet(this.handleBrightnessGet.bind(this))
             .onSet(this.handleBrightnessSet.bind(this));
 
         this.service
-            .addCharacteristic(this.Characteristic.Hue)
+            .getCharacteristic(this.Characteristic.Hue)
             .onSet(this.handleHueSet.bind(this))
             .onGet(this.handleHueGet.bind(this));
 
         this.service
-            .addCharacteristic(this.Characteristic.Saturation)
+            .getCharacteristic(this.Characteristic.Saturation)
             .onSet(this.handleSaturationSet.bind(this))
             .onGet(this.handleSaturationGet.bind(this));
                 
