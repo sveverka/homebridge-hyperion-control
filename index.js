@@ -22,7 +22,7 @@ class Hyperion {
         this.Service = this.api.hap.Service;
         this.Characteristic = this.api.hap.Characteristic;
         this.service = new this.Service.Lightbulb(this.name);
-        const switchname = this.name.concat(" ", "global HDR")
+        const switchname = "global HDR"
         this.switchService = new this.Service.Switch(switchname)
         
         this.switchService.getCharacteristic(this.Characteristic.On)
@@ -56,7 +56,7 @@ class Hyperion {
 
         const {data} = await axios.post(url, {command: "serverinfo"});
         const status = +data.info.components[0].enabled;
-        this.log.debug(data.info.components)
+        this.log.info("hsb", data.info.components)
         return Boolean(status)
             ? 1
             : 0;
@@ -118,18 +118,19 @@ class Hyperion {
         const {url} = this;
 
         const {data} = await axios.post(url, {"command": "serverinfo"});
-        const {brightness} = data.info.adjustment[0] && 0;
+        const {brightness} = data.info.adjustment[0];
+        this.log.info('brightness is ', brightness)
         this.service.getCharacteristic(this.Characteristic.Brightness).updateValue(brightness);
     }
 
     async handleBrightnessSet(value) {
         const {url} = this;
-        const {brigtness} = value && 100
-        this.log.info('setting brightness to ', brigtness)
+        const {brightness} = value && 100
+        this.log.info('setting brightness to ', brightness)
         const {data} = await axios.post(url, {
             command: "adjustment",
             adjustment: {
-                brightness: brigtness
+                brightness: brightness
             }
         });
         const {success} = data;
