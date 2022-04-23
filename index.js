@@ -24,7 +24,7 @@ class Hyperion {
         this.service = new this.Service.Lightbulb(this.name);
         this.switchService = new this.Service.Switch(this.name)
         
-        this.switchService.getCharacteristic(Characteristic.On)
+        this.switchService.getCharacteristic(this.Characteristic.On)
             .onGet(this.handleVideoModeHdrOnGet.bind(this))
             .onSet(this.handleVideoModeHdrOnSet.bind(this));
 
@@ -181,7 +181,7 @@ class Hyperion {
     }
 
     getServices() {
-        
+
         return [
             this.service,this.switchService
         ];
