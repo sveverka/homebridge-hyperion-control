@@ -22,6 +22,11 @@ class Hyperion {
         this.Service = this.api.hap.Service;
         this.Characteristic = this.api.hap.Characteristic;
         this.service = new this.Service.Lightbulb(this.name);
+        this.switchService = new this.Service.Switch(this.name)
+        
+        this.switchService.getCharacteristic(Characteristic.On)
+            .onGet(this.handleVideoModeHdrOnGet.bind(this))
+            .onSet(this.handleVideoModeHdrOnSet.bind(this));
 
         this.service.getCharacteristic(this.Characteristic.On)
             .onGet(this.handleOnGet.bind(this))
@@ -40,7 +45,8 @@ class Hyperion {
             .addCharacteristic(this.Characteristic.Saturation)
             .onSet(this.handleSaturationSet.bind(this))
             .onGet(this.handleSaturationGet.bind(this));
-
+            this.switchService = new Service.Switch(this.name);
+                
         this.log.info(`HyperHDR Service Started: ${this.name}`)
     }
 
@@ -70,7 +76,8 @@ class Hyperion {
         const {success} = data;
 
         if (!success) {
-            this.log.error(`Failed to set the state to: ${value}`);
+            this.log.error(`Failed to set the state to: ${value
+            }`);
         }
     }
 
@@ -174,11 +181,7 @@ class Hyperion {
     }
 
     getServices() {
-        this.switchService = new Service.Switch(this.name);
-		this.switchService
-			.getCharacteristic(Characteristic.On)
-			.on('get', this.handleVideoModeHdrOnGet.bind(this))
-			.on('set', this.handleVideoModeHdrOnSet.bind(this));
+        
         return [
             this.service,this.switchService
         ];
