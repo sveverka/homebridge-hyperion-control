@@ -1,7 +1,7 @@
 {
   "name": "homebridge-hyperhdr-service",
   "displayName": "Hyperion",
-  "version": "3.1.2-beta.0",
+  "version": "3.1.2-beta.1",
   "description": "Homebridge plugin to control HyperHDR",
   "author": "Cortlan Bainbridge",
   "license": "MIT",
