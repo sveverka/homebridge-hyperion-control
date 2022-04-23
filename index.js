@@ -45,7 +45,6 @@ class Hyperion {
             .addCharacteristic(this.Characteristic.Saturation)
             .onSet(this.handleSaturationSet.bind(this))
             .onGet(this.handleSaturationGet.bind(this));
-            this.switchService = new Service.Switch(this.name);
                 
         this.log.info(`HyperHDR Service Started: ${this.name}`)
     }
