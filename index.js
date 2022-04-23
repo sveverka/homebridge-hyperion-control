@@ -4,10 +4,10 @@ const Color = require('color');
 const wait = async (timeToDelay) => new Promise((resolve) => setTimeout(resolve, timeToDelay));
 
 module.exports = (api) => {
-    api.registerAccessory('homebridge-hyperhdr-control', 'HyperHDR', Hyperion);
+    api.registerAccessory('homebridge-hyperhdr-control', 'HyperHDR', HyperHDR);
 }
 
-class Hyperion {
+class HyperHDR {
     constructor(log, config, api) {
         this.log = log;
         this.config = config;
@@ -56,7 +56,6 @@ class Hyperion {
 
         const {data} = await axios.post(url, {command: "serverinfo"});
         const status = +data.info.components[0].enabled;
-        this.log.info("hsb", data.info.components)
         return Boolean(status)
             ? 1
             : 0;
@@ -119,13 +118,12 @@ class Hyperion {
 
         const {data} = await axios.post(url, {"command": "serverinfo"});
         const {brightness} = data.info.adjustment[0];
-        this.log.info('brightness is ', brightness, data.info.adjustment)
         this.service.getCharacteristic(this.Characteristic.Brightness).updateValue(brightness);
     }
 
     async handleBrightnessSet(value) {
         const {url} = this;
-        const {brightness} = value && 100
+        const {brightness} = value && "100"
         this.log.debug('setting brightness to ', brightness)
         const {data} = await axios.post(url, {
             command: "adjustment",
