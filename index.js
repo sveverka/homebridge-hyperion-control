@@ -4,7 +4,7 @@ const Color = require('color');
 const wait = async (timeToDelay) => new Promise((resolve) => setTimeout(resolve, timeToDelay));
 
 module.exports = (api) => {
-    api.registerAccessory('homebridge-hyperion-control', 'Hyperion', Hyperion);
+    api.registerAccessory('homebridge-hyperhdr-control', 'Hyperion', Hyperion);
 }
 
 class Hyperion {
@@ -21,7 +21,6 @@ class Hyperion {
 
         this.Service = this.api.hap.Service;
         this.Characteristic = this.api.hap.Characteristic;
-
         this.service = new this.Service.Lightbulb(this.name);
 
         this.service.getCharacteristic(this.Characteristic.On)
@@ -42,7 +41,7 @@ class Hyperion {
             .onSet(this.handleSaturationSet.bind(this))
             .onGet(this.handleSaturationGet.bind(this));
 
-        this.log.info(`Hyperion Service Started: ${this.name}`)
+        this.log.info(`HyperHDR Service Started: ${this.name}`)
     }
 
     async handleOnGet() {
@@ -74,6 +73,35 @@ class Hyperion {
             this.log.error(`Failed to set the state to: ${value}`);
         }
     }
+
+    async handleVideoModeHdrOnGet(value)  {
+
+        this.log.debug('Triggered GET On');
+        const {url} = this;
+
+        const {data} = await axios.post(url, {command: "serverinfo"});
+        const status = data.info.components[0].enabled;
+
+        return Boolean(status)
+            ? 1
+            : 0;
+    }
+
+    async handleVideoModeHdrOnSet(value) {
+        this.log.debug('Triggered HDR SET On:', value);
+        const {url} = this;
+
+        const {data} = await axios.post(url, {
+            command:"videomodehdr",
+            HDR:value
+        });
+        const {success} = data;
+
+        if (!success) {
+            this.log.error(`Failed to set the state to: ${value}`);
+        }
+    }
+
 
     async handleBrightnessGet() {
         this.log.debug('Triggered GET On');
