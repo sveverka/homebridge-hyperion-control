@@ -112,22 +112,16 @@ class HyperHDR {
     }
 
 
-    handleBrightnessGet(callback) {
+    async handleBrightnessGet() {
         this.log.debug('Triggered GET On');
         const {url} = this;
 
         const {data} = await axios.post(url, {"command": "serverinfo"});
         const {brightness} = data.info.adjustment[0];
         this.service.getCharacteristic(this.Characteristic.Brightness).updateValue(brightness);
-        return
     }
 
-    handleBrightnessSet(value, callback) {
-        if (!this.has.brightness) {
-            this.log.warn("Ignoring request; No 'brightness' defined.");
-            callback(new Error("No 'brightness' defined in configuration"));
-            return;
-        }
+    async handleBrightnessSet(value) {
         const {url} = this;
         const {brightness} = value && "100"
         this.log.debug('setting brightness to ', brightness)
@@ -140,10 +134,10 @@ class HyperHDR {
         const {success} = data;
 
         if (!success) {
-            this.log.error(`Failed to set the brightness to: ${brightness}`);
+            this.log.error(`Failed to set the brightness to: ${value}`);
         }
 
-        this.service.getCharacteristic(this.Characteristic.Brightness).updateValue(brightness);
+        this.service.getCharacteristic(this.Characteristic.Brightness).updateValue(value);
     }
 
     async handleHueSet(value) {
