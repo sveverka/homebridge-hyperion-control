@@ -49,8 +49,8 @@ class Hyperion {
         const {url} = this;
 
         const {data} = await axios.post(url, {command: "serverinfo"});
-        const status = data.info.components[0].enabled;
-
+        const status = +data.info.components[0].enabled;
+        this.log.debug(data.info.components)
         return Boolean(status)
             ? 1
             : 0;
@@ -174,8 +174,13 @@ class Hyperion {
     }
 
     getServices() {
+        this.switchService = new Service.Switch(this.name);
+		this.switchService
+			.getCharacteristic(Characteristic.On)
+			.on('get', this.handleVideoModeHdrOnGet.bind(this))
+			.on('set', this.handleVideoModeHdrOnSet.bind(this));
         return [
-            this.service,
+            this.service,this.switchService
         ];
     }
 }
