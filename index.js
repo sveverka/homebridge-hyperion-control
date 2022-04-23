@@ -98,8 +98,11 @@ class Hyperion {
         const {url} = this;
 
         const {data} = await axios.post(url, {
-            command:"videomodehdr",
-            HDR:value
+            command: "componentstate",
+            componentstate: {
+                component: "HDR",
+                state: value
+            }
         });
         const {success} = data;
 
