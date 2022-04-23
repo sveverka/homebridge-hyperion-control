@@ -81,13 +81,13 @@ class Hyperion {
         }
     }
 
-    async handleVideoModeHdrOnGet(value)  {
+    async handleVideoModeHdrOnGet()  {
 
         this.log.debug('Triggered GET On');
         const {url} = this;
 
         const {data} = await axios.post(url, {command: "serverinfo"});
-        const status = data.info.components[0].enabled;
+        const status = data.info.components[1].enabled;
 
         return Boolean(status)
             ? 1
@@ -119,14 +119,14 @@ class Hyperion {
 
         const {data} = await axios.post(url, {"command": "serverinfo"});
         const {brightness} = data.info.adjustment[0];
-        this.log.info('brightness is ', brightness)
+        this.log.info('brightness is ', brightness, data.info.adjustment)
         this.service.getCharacteristic(this.Characteristic.Brightness).updateValue(brightness);
     }
 
     async handleBrightnessSet(value) {
         const {url} = this;
         const {brightness} = value && 100
-        this.log.info('setting brightness to ', brightness)
+        this.log.debug('setting brightness to ', brightness)
         const {data} = await axios.post(url, {
             command: "adjustment",
             adjustment: {
