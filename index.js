@@ -117,13 +117,13 @@ class HyperHDR {
         const {url} = this;
 
         const {data} = await axios.post(url, {"command": "serverinfo"});
-        const {brightness} = data.info.adjustment[0];
+        const {brightness} = data.info.adjustment[3];
         this.service.getCharacteristic(this.Characteristic.Brightness).updateValue(brightness);
     }
 
     async handleBrightnessSet(value) {
         const {url} = this;
-        const {brightness} = value && "100"
+        const brightness = value && "100"
         this.log.debug('setting brightness to ', brightness)
         const {data} = await axios.post(url, {
             command: "adjustment",
@@ -134,10 +134,10 @@ class HyperHDR {
         const {success} = data;
 
         if (!success) {
-            this.log.error(`Failed to set the brightness to: ${value}`);
+            this.log.info(`Failed to set the brightness to: ${brightness}`);
         }
 
-        this.service.getCharacteristic(this.Characteristic.Brightness).updateValue(value);
+        this.service.getCharacteristic(this.Characteristic.Brightness).updateValue(brightness);
     }
 
     async handleHueSet(value) {
