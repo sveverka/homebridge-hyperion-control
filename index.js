@@ -17,13 +17,13 @@ class HyperHDR {
         this.port = config.port || 8090;
         this.priority = config.priority || 100;
         this.url = `${config.url}:${this.port}/json-rpc`;
-        this.color = Color([255, 200, 150])
+        this.color = Color([255, 200, 150]);
 
         this.Service = this.api.hap.Service;
         this.Characteristic = this.api.hap.Characteristic;
         this.service = new this.Service.Lightbulb(this.name);
-        const switchname = "global HDR"
-        this.switchService = new this.Service.Switch(switchname)
+        const switchname = "global HDR";
+        this.switchService = new this.Service.Switch(switchname);
         
         this.switchService.getCharacteristic(this.Characteristic.On)
             .onGet(this.handleVideoModeHdrOnGet.bind(this))
@@ -47,7 +47,7 @@ class HyperHDR {
             .onSet(this.handleSaturationSet.bind(this))
             .onGet(this.handleSaturationGet.bind(this));
                 
-        this.log.info(`HyperHDR Service Started: ${this.name}`)
+        this.log.info(`HyperHDR Service Started: ${this.name}`);
     }
 
     async handleOnGet() {
@@ -118,13 +118,13 @@ class HyperHDR {
 
         const {data} = await axios.post(url, {"command": "serverinfo"});
         const brightness = data.info.adjustment[3];
-        this.log.info("hsb ", data.info.adjustment)
+        this.log.info("hsb ", data.info.adjustment);
         this.service.getCharacteristic(this.Characteristic.Brightness).updateValue(brightness);
     }
 
     async handleBrightnessSet(value) {
         const {url} = this;
-        const brightness = value && "100"
+        const brightness = value && 100
         this.log.debug('setting brightness to ', brightness)
         const {data} = await axios.post(url, {
             command: "adjustment",
@@ -133,7 +133,7 @@ class HyperHDR {
             }
         });
         const {success} = data;
-
+        this.log.info(`data: ${data}`);
         if (!success) {
             this.log.info(`Failed to set the brightness to: ${brightness}`);
         }
@@ -145,9 +145,9 @@ class HyperHDR {
         const newHue = Color(this.color).hue(value);
         this.color = newHue;
 
-        this.log.debug(`Setting hue to: ${value}`)
+        this.log.debug(`Setting hue to: ${value}`);
 
-        this.log.debug(`Successfully set the hue.`)
+        this.log.debug(`Successfully set the hue.`);
 
         return this.color.hue();
     }
@@ -157,7 +157,7 @@ class HyperHDR {
     }
 
     async handleSaturationGet() {
-        return this.color.saturationv()
+        return this.color.saturationv();
     }
 
     async handleSaturationSet(level) {
@@ -178,7 +178,7 @@ class HyperHDR {
         if (!success) {
             this.log.error(`Failed to set the saturation to: ${level}`);
         } else {
-            this.log.debug(`Successfully set the saturation. New color ${newColor.rgb().round().array()}`)
+            this.log.debug(`Successfully set the saturation. New color ${newColor.rgb().round().array()}`);
             this.color.hue(newColor.hue());
         }
     }
