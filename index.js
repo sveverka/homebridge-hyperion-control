@@ -34,8 +34,8 @@ class HyperHDR {
             .onSet(this.handleOnSet.bind(this));
 
         this.service.getCharacteristic(this.Characteristic.Brightness)
-            .onGet(this.handleBrightnessGet.bind(this))
-            .onSet(this.handleBrightnessSet.bind(this));
+            .onGet(async () => this.handleBrightnessGet())
+            .onSet(async (value) => this.handleBrightnessSet(value));
 
         this.service
             .getCharacteristic(this.Characteristic.Hue)
