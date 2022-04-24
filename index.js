@@ -26,8 +26,8 @@ class HyperHDR {
         this.switchService = new this.Service.Switch(switchname);
         
         this.switchService.getCharacteristic(this.Characteristic.On)
-            .onGet(this.handleVideoModeHdrOnGet.bind(this))
-            .onSet(this.handleVideoModeHdrOnSet.bind(this));
+            .onGet(async () => this.handleBrightnessGet())
+            .onSet(async (value) => this.handleBrightnessSet(value));
 
         this.service.getCharacteristic(this.Characteristic.On)
             .onGet(this.handleOnGet.bind(this))
