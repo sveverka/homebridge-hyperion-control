@@ -117,7 +117,8 @@ class HyperHDR {
         const {url} = this;
 
         const {data} = await axios.post(url, {"command": "serverinfo"});
-        const {brightness} = data.info.adjustment[3];
+        const brightness = data.info.adjustment[3];
+        this.log.info("hsb ", data.info.adjustment)
         this.service.getCharacteristic(this.Characteristic.Brightness).updateValue(brightness);
     }
 
