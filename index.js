@@ -72,6 +72,22 @@ class HyperHDR {
                 state: value
             }
         });
+
+        const {dataSwitchDevice} = await axios.post(url, {
+            command: "instance",
+            subcommand : "switchTo",
+            instance : 0
+        });
+
+        const {dataEnableLED} = await axios.post(url, {
+            command:"componentstate",
+            componentstate:
+            {
+                component:"LEDDEVICE",
+                state: true
+            }
+        });
+
         const {success} = data;
 
         if (!success) {
