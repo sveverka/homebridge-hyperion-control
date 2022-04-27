@@ -1,9 +1,9 @@
 {
   "name": "homebridge-hyperhdr-service",
   "displayName": "HyperHDR",
-  "version": "3.1.3-beta.20",
+  "version": "1.0.1",
   "description": "Homebridge plugin to control HyperHDR",
-  "author": "Cortlan Bainbridge",
+  "author": "Si Ham Bui",
   "license": "MIT",
   "main": "index.js",
   "engines": {
