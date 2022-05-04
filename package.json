@@ -1,7 +1,7 @@
 {
   "name": "homebridge-hyperhdr-service",
   "displayName": "HyperHDR",
-  "version": "1.0.1",
+  "version": "1.0.4",
   "description": "Homebridge plugin to control HyperHDR",
   "author": "Si Ham Bui",
   "license": "MIT",
