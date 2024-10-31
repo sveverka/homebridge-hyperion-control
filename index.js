@@ -114,10 +114,8 @@ class HyperHDR {
         const {url} = this;
 
         const {data} = await axios.post(url, {
-            command: "componentstate",
-            componentstate: {
-                component: "HDR",
-                state: value
+              "command" : "clear",
+              "priority" : 50
             }
         });
         const {success} = data;
